@@ -1,0 +1,31 @@
+.mixas{
+    background-color: #1d3221;
+    height: 50px;
+}
+
+.about{
+    border-radius: 50%;
+    border: 1px solid #1d3221;
+    color: wheat;
+    background-color: #1d3221;
+    
+}
+
+.logo{
+    margin-left: 5px;
+    margin-top: 2px;
+    color: wheat;
+    user-select: none;
+}
+
+.mainContentContainer{
+    overflow-y:auto;
+    height: calc(100vh - 50px);
+    width: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+    .mixas {
+      background-color: lightblue;
+    }
+  }

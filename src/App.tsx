@@ -1,26 +1,19 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { MainContent, NavigationBar } from "./components";
+import "./App.scss";
+import { SideBar } from "./components/SideBar/SideBar";
 
-function App() {
+const App: React.FunctionComponent = () => {
+  const [show, setShow] = useState(false);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="d-flex flex-column overflow-hidden vh-100 App">
+      <NavigationBar setSideVisible={() => setShow(!show)} />
+      <div className="d-flex flex-row">
+        <SideBar />
+        <MainContent />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
