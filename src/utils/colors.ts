@@ -1,7 +1,7 @@
 import { ChartDataInterval } from "../types";
 
-export class AggregatorUtils {
-  public static aggregateByKYears(
+export class ColorUtils {
+  private static aggregateByKYears(
     lables: string[],
     oldData: any,
     years: number
@@ -46,4 +46,10 @@ export class AggregatorUtils {
       backgroundColor: oldData.backgroundColor,
     };
   }
+
+  public static getrandomColor(){
+    return `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+      Math.random() * 255
+    )}, ${Math.floor(Math.random() * 255)})`;
+  };
 }

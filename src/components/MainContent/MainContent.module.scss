@@ -19,9 +19,15 @@
 }
 
 .mainContentContainer{
+    display: flex;
+    position: relative;
     overflow-y:auto;
     height: calc(100vh - 50px);
     width: 100%;
+}
+
+.userOptions{
+    border-right: 1px solid magenta;
 }
 
 @media only screen and (max-width: 600px) {

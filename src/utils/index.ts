@@ -1,1 +1,2 @@
-export * from "./aggregateValues";
+export * from "./colors";
+export * from "./dummyData";

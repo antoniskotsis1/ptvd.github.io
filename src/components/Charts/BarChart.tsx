@@ -41,9 +41,17 @@ export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
             bottom: 30,
           },
         },
+        legend: {
+          display: true,
+          
+          labels: {
+              color: 'rgb(55, 55, 55)'
+          }
+      },
       },
     };
 
+  
     switch (type) {
       case ChartType.Bar:
         return <Bar data={data} options={title} />;
@@ -56,7 +64,7 @@ export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
     }
   };
 
-  return <div>{renderChart()}</div>;
+  return <div className="vw-100">{renderChart()}</div>;
 };
 
 interface BarChartProps {

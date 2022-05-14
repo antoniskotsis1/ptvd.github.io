@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useState } from "react";
 import styles from "./NavigationBar.module.scss";
 import { InfoModal } from "../Modals";
+import { DropDown } from "../DropDown/DropDown";
+import { ChartType } from "../../types";
 
 export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
   props
@@ -18,10 +20,9 @@ export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
     () => setShowInfoModal(true),
     [setShowInfoModal]
   );
-
+  const [chartType, setChartType] = useState("Select Mixas");
   return (
     <>
-
       <div className={`w-100 d-flex bg-dark align-items-center`}>
         <div
           className={`${styles.productName} fw-bold fs-3 ms-2 me-auto`}
@@ -30,9 +31,20 @@ export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
         >
           MDS
         </div>
-        <div className={`${styles.aboutButton} bg-dark ms-auto `} onClick={handleShow}>
-          <FontAwesomeIcon className="p-3" icon={faInfo} role={"button"}/>
+        <div className="ms-auto">
+        <DropDown
+            title={chartType}
+            items={[ChartType.Bar, ChartType.Line, ChartType.Scatter]}
+            setSelectedValue={(name) => setChartType(name as ChartType)}
+          />
+          </div>
+        <div
+          className={`${styles.aboutButton} bg-dark ms-auto `}
+          onClick={handleShow}
+        >
+          <FontAwesomeIcon className="p-3" icon={faInfo} role={"button"} />
         </div>
+        
         <InfoModal
           modalTitle="MDS Product info"
           modalBody="This abra katabra app was brought by MDS"
