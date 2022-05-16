@@ -26,7 +26,7 @@ ChartJS.register(
 );
 
 export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
-  const { data, type, aggregadedByYears } = props;
+  const { data, type, aggregadedByYears, scatterExtraInfo } = props;
 
   const renderChart = () => {
     const title = {
@@ -43,22 +43,56 @@ export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
         },
         legend: {
           display: true,
-          
+
           labels: {
-              color: 'rgb(55, 55, 55)'
-          }
-      },
+            color: "rgb(55, 55, 55)",
+          },
+        },
       },
     };
 
-  
     switch (type) {
       case ChartType.Bar:
         return <Bar data={data} options={title} />;
       case ChartType.Line:
         return <Line data={data} options={title} />;
       case ChartType.Scatter:
-        return <Scatter data={data} options={title} />;
+
+        const label = (tooltipItem: any) => {
+          const yearIndex = data.datasets[0].data.indexOf(tooltipItem.raw);
+          return "Year:" + data.labels[yearIndex];
+        };
+        const afterLabel = (tooltipItem: any) => {
+          return `${scatterExtraInfo?.ylabel}:${tooltipItem.raw.y}\n${scatterExtraInfo?.xlabel}:${tooltipItem.raw.x}`;
+        };
+
+        return (
+          <Scatter
+            data={data}
+            options={{
+              showLine: true,
+              responsive:true,
+              plugins: {
+                legend:{display: false},
+                title: {display:true, text:`Correlation between ${scatterExtraInfo?.xlabel} and ${scatterExtraInfo?.ylabel}`},
+                tooltip: {
+                  callbacks: {
+                    label: label,
+                    afterLabel: afterLabel,
+                  },
+                },
+              },
+              scales: {
+                y: {
+                  title: { text: scatterExtraInfo?.ylabel, display: true },
+                },
+                x: {
+                  title: { text: scatterExtraInfo?.xlabel, display: true },
+                },
+              },
+            }}
+          />
+        );
       default:
         break;
     }
@@ -69,6 +103,7 @@ export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
 
 interface BarChartProps {
   type: ChartType;
-  data: ChartData;
+  data: any;
+  scatterExtraInfo?: { xlabel: string; ylabel: string };
   aggregadedByYears?: number;
 }

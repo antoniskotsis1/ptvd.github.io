@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
+import styles from "./DropDown.module.scss";
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const { title, items, setSelectedValue } = props;
   const [country,setCountry] = useState(title);
 
   return (
-    <Dropdown className="me-1">
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
+    <Dropdown className={` me-1`}>
+      <Dropdown.Toggle  style={{padding: 0}}>
         {title}
       </Dropdown.Toggle>
 
@@ -15,6 +16,7 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
         {items.map((name: string) => {
           return (
             <Dropdown.Item
+           
               key={name}
               onClick={() => {
                 setSelectedValue(name);

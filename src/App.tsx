@@ -4,13 +4,19 @@ import "./App.scss";
 // import { SideBar } from "./components/SideBar/SideBar";
 
 const App: React.FunctionComponent = () => {
-  const [show, setShow] = useState(false);
+  const [chartType, setChartType] = useState("Select Type");
+  const [chartFamily, setChartFamily] = useState("Time Line");
   return (
     <div className="d-flex flex-column overflow-hidden vh-100 App">
-      <NavigationBar setSideVisible={() => setShow(!show)} />
+      <NavigationBar
+        chartFamily={chartFamily}
+        chartType={chartType}
+        setChartFamily={(value) => setChartFamily(value)}
+        setChartType={(value) => setChartType(value)}
+      />
       <div className="d-flex flex-row">
         {/* <SideBar /> */}
-        <MainContent />
+        <MainContent chartType={chartType} chartFamily={chartFamily}/>
       </div>
     </div>
   );

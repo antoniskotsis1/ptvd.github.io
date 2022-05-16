@@ -4,6 +4,7 @@ export type ChartData = {
 }
   
 export type ChartDataInterval = {
+    id:number
     label: string;
     data: number[];
     backgroundColor: string,
