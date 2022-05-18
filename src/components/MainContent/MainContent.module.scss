@@ -1,73 +1,69 @@
-.mixas{
-    background-color: #1d3221;
-    height: 50px;
+.mixas {
+  background-color: #1d3221;
+  height: 50px;
 }
 
-.about{
-    border-radius: 50%;
-    border: 1px solid #1d3221;
-    color: wheat;
-    background-color: #1d3221;
+.moreOptions {
+  color: white;
+  align-self: center;
 }
 
-.hideOptions{transition:3s;
-    transform: translate(-100%);
-}
-
-.fuckMe{
-    position: absolute;
-    top: 50%;
-    right: -10px;
-    border-radius: 50%;
-    box-shadow: -1px 3px 8px 2px;
-    z-index: 1000;
-    background-color: white;
-    padding: 5px;
-    border: 1px solid magenta;
-}
-
-.logo{
-    margin-left: 5px;
-    margin-top: 2px;
-    color: wheat;
-    user-select: none;
-}
-
-.mainContentContainer{
-    display: flex;
-    position: relative;
-    overflow-y:auto;
-    height: calc(100vh - 50px);
-    width: 100%;
-}
-
-.userOptions{
-    border-right: 1px solid magenta;
-    box-shadow: 2px -9px 6px 0px;
-    position: relative;
-}
-
-.userSelectionTitle{
-    text-shadow: -1px -1px 8px;
-    font-weight: bold;
-    font-size: 15px;
-}
-
-.userOptionItem{
-box-shadow: 2px 2px 20px 0px;
-    border-radius: 4rem;
-    padding: 5px;
-    background-color: #0d6efd;}
-
-.addOptionBtn{
-    box-shadow: 0px 2px 2px;
-    :active{
-        box-shadow: inset 0px 2px 2px;
+.moreOptionsItem{
+    padding: 0.5rem;
+    width: auto;
+    &.delete{
+        color: rgb(129, 35, 35);
     }
+}
+
+.about {
+  border-radius: 50%;
+  border: 1px solid #1d3221;
+  color: wheat;
+  background-color: #1d3221;
+}
+
+.logo {
+  margin-left: 5px;
+  margin-top: 2px;
+  color: wheat;
+  user-select: none;
+}
+
+.mainContentContainer {
+  display: flex;
+  position: relative;
+  overflow-y: auto;
+  height: calc(100vh - 50px);
+  width: 100%;
+}
+
+.userOptions {
+  box-shadow: -2px -2px 6px 1px;
+  position: relative;
+}
+
+.userSelectionTitle {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.userOptionItem {
+  box-shadow: 2px 2px 2px 0px;
+  border-radius: 8px;
+  padding: 5px;
+  background-color: #0d6efd;
+}
+
+.addOptionBtn {
+  box-shadow: 0px 2px 2px;
+  :active {
+    box-shadow: inset 0px 2px 2px;
+  }
 }
 
 @media only screen and (max-width: 600px) {
-    .mixas {
-      background-color: lightblue;
-    }
+  .mixas {
+    background-color: lightblue;
   }
+}

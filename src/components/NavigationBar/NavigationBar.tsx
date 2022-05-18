@@ -1,11 +1,12 @@
-import { faInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCog, faInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useState } from "react";
 import styles from "./NavigationBar.module.scss";
 import { InfoModal } from "../Modals";
 import { DropDown } from "../DropDown/DropDown";
 import { ChartType } from "../../types";
-import axios from "axios";
+import { Button } from "react-bootstrap";
+import { OptionsModal } from "../Modals/OptionsModal";
 
 export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
   props
@@ -21,15 +22,21 @@ export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
     () => setShowInfoModal(true),
     [setShowInfoModal]
   );
-  
-    const mixas = useCallback(()=>{
-      fetch("https://ptvd-api.herokuapp.com/mds/countries",
-      {headers:{"Access-Control-Allow-Origin":"*",'Content-Type':"application/json"}})
-      .then((res)=>{console.log(res);
-      }).then((res)=>{console.log(res);
-      })
-    },[])
 
+  const mixas = useCallback(() => {
+    fetch("https://ptvd-api.herokuapp.com/mds/countries", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .then((res) => {
+        console.log(res);
+      });
+  }, []);
 
   return (
     <>
@@ -37,39 +44,55 @@ export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
         <div
           className={`${styles.productName} fw-bold fs-3 ms-2 me-auto`}
           role="button"
-         onClick={mixas}
+          onClick={mixas}
         >
           MDS
         </div>
-        <div className="d-flex ms-auto">
+        <div className={`d-flex ms-auto ${styles.chartSettings}`}>
           <DropDown
             title={chartFamily}
-            items={["Time Line", "Tredy Boys"]}
-            setSelectedValue={(name) => setChartFamily(name as ChartType)}
+            items={["Time/Trend Line", "Correlation Plot"]}
+            setSelectedValue={(name) => {
+              if (name !== "Time/Trend Line") {
+                setChartType(ChartType.Scatter);
+              } else {
+                setChartType("Select Type");
+              }
+              setChartFamily(name as ChartType);
+            }}
+            isNavBar
           />
           <DropDown
             title={chartType}
             items={
-              chartFamily === "Time Line"
+              chartFamily === "Time/Trend Line"
                 ? [ChartType.Bar, ChartType.Line]
-                : [ChartType.Bar, ChartType.Line, ChartType.Scatter]
+                : [ChartType.Scatter]
             }
-            setSelectedValue={(name) => setChartType(name as ChartType)}
+            setSelectedValue={(name) => {
+              setChartType(name as ChartType);
+            }}
+            isNavBar
           />
+          <div className={styles.moreOptions}>
+            <FontAwesomeIcon icon={faCog} />
+          </div>
         </div>
-        <div
-          className={`${styles.aboutButton} ms-auto `}
-          onClick={handleShow}
-        >
+        <div className={`${styles.aboutButton} ms-auto `} onClick={handleShow}>
           <FontAwesomeIcon className="p-3" icon={faInfo} role={"button"} />
         </div>
-
-        <InfoModal
-          modalTitle="MDS Product info"
+        <OptionsModal
+          modalTitle="MDS Choose additional settings"
           modalBody="This abra katabra app was brought by MDS"
           showModal={showInfoModal}
           handleClose={handleClose}
         />
+        {/* <InfoModal
+          modalTitle="MDS Product info"
+          modalBody="This abra katabra app was brought by MDS"
+          showModal={showInfoModal}
+          handleClose={handleClose}
+        /> */}
       </div>
     </>
   );
@@ -79,7 +102,7 @@ export default NavigationBar;
 
 interface NavigationBarProps {
   chartType: string;
-  setChartType: (type:string) => void;
+  setChartType: (type: string) => void;
   chartFamily: string;
-  setChartFamily: (type:string) => void;
+  setChartFamily: (type: string) => void;
 }

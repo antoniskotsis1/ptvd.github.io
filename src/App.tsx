@@ -5,7 +5,7 @@ import "./App.scss";
 
 const App: React.FunctionComponent = () => {
   const [chartType, setChartType] = useState("Select Type");
-  const [chartFamily, setChartFamily] = useState("Time Line");
+  const [chartFamily, setChartFamily] = useState("Time/Trend Line");
   return (
     <div className="d-flex flex-column overflow-hidden vh-100 App">
       <NavigationBar

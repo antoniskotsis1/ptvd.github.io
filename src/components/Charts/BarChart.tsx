@@ -98,7 +98,7 @@ export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
     }
   };
 
-  return <div className="vw-100">{renderChart()}</div>;
+  return <div className="d-flex align-items-center vw-100">{renderChart()}</div>;
 };
 
 interface BarChartProps {

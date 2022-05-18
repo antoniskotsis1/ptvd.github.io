@@ -4,10 +4,10 @@ import { BarChart } from "../Charts/BarChart";
 import styles from "./MainContent.module.scss";
 import { Toast } from "react-bootstrap";
 import GOby from "../../assets/GOby.gif";
-import { PlotOptions } from "./PlotOptions";
+import { PlotDataSelectionList } from "./PlotDataSelectionList/PlotDataSelectionList";
 import { ColorUtils } from "../../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera, faCar, faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 
 export const MainContent: React.FunctionComponent<MainContentProps> = (
   props
@@ -93,15 +93,15 @@ export const MainContent: React.FunctionComponent<MainContentProps> = (
 
   const renderScatterDataOptions = () => (
     <>
-      <span className="fw-bold">Y: </span>
-      <PlotOptions
+      <span className="fw-bold me-auto ms-2">Y-Axis: </span>
+      <PlotDataSelectionList
         selectedData={selectedDataY}
         setData={(newData) => setDataY(newData)}
         triggerPopUp={(message) => setShow(message)}
         isCorrelationPlot={false}
       />
-      <span className="fw-bold">X: </span>
-      <PlotOptions
+      <span className="fw-bold me-auto ms-2">X-Axis: </span>
+      <PlotDataSelectionList
         selectedData={selectedDataX}
         setData={(newData) => setDataX(newData)}
         triggerPopUp={(message) => setShow(message)}
@@ -149,17 +149,15 @@ export const MainContent: React.FunctionComponent<MainContentProps> = (
       </div>
     );
   };
-  const [h, seth] = useState(false);
+ 
   return (
     <div className={styles.mainContentContainer}>
       {renderToast()}
-      <div className={`${styles.userOptions} ${h?styles.hideOptions:""}`}>
+      <div className={`${styles.userOptions}`}>
         <span className={styles.userSelectionTitle}>Select data to plot</span>
-        <div className={styles.fuckMe} onClick={()=>{seth(!h)}}>
-          <FontAwesomeIcon className="p2" role={"button"} icon={faCaretLeft} />
-        </div>
-        {chartFamily === "Time Line" ? (
-          <PlotOptions
+        
+        {chartFamily === "Time/Trend Line" ? (
+          <PlotDataSelectionList
             selectedData={selectedData}
             setData={(newData) => setData(newData)}
             triggerPopUp={(message) => setShow(message)}
