@@ -1,8 +1,5 @@
 import {
   faBook,
-  faCog,
-  faE,
-  faEllipsisH,
   faPen,
   faPlay,
   faPlus,
@@ -10,8 +7,8 @@ import {
   faUserCog,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCallback, useState } from "react";
-import { OverlayTrigger, Popover } from "react-bootstrap";
+import Popover from "@mui/material/Popover";
+import { memo, useCallback, useState } from "react";
 import { ColorUtils, country_list, indicators } from "../../../utils";
 import { Generator } from "../../../utils/generator";
 import { DropDown } from "../../DropDown/DropDown";
@@ -27,10 +24,12 @@ export const PlotDataSelectionList: React.FunctionComponent<
   ]);
   const [modal, showModal] = useState({ bd: "", show: false });
 
-  // const setSelectedColor = (id: number) => {
-  //   const existsInPlot = selectedData.filter((data: any) => data.id === id);
-  //   return existsInPlot.length ? "bg-warning" : "";
-  // };
+  const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<{
+    id: number;
+    country: string;
+    indic: string;
+  }>();
 
   const getPlotIcon = (id: number) => {
     const existsInPlot = selectedData.filter((data: any) => data.id === id);
@@ -77,8 +76,7 @@ export const PlotDataSelectionList: React.FunctionComponent<
             triggerPopUp({ show: true, message: "No default values" });
           }
         });
-      }
-      else {
+      } else {
         if (c === "Country" || i === "Metric") {
           triggerPopUp({
             show: true,
@@ -119,21 +117,18 @@ export const PlotDataSelectionList: React.FunctionComponent<
     [checkIfDataExists, isEdit, selectedData, setData]
   );
 
-  const deleteDatasFromPlot = useCallback(
-    (id: number, country: string, indic: string) => {
-      if (selectionItem.length === 1) {
-        const newSelection = { id: 0, country: "Country", indic: "Metric" };
-        setData([]);
-        setSelectionItem([newSelection]);
-      } else {
-        setData(selectedData.filter((data: any) => data.id !== id));
-        setSelectionItem(
-          selectionItem.filter((selection) => selection.id !== id)
-        );
-      }
-    },
-    [selectionItem, selectedData, setData]
-  );
+  const deleteDatasFromPlot = useCallback(() => {
+    if (selectionItem.length === 1) {
+      const newSelection = { id: 0, country: "Country", indic: "Metric" };
+      setData([]);
+      setSelectionItem([newSelection]);
+    } else {
+      setData(selectedData.filter((data: any) => data.id !== selectedItem?.id));
+      setSelectionItem(
+        selectionItem.filter((selection) => selection.id !== selectedItem?.id)
+      );
+    }
+  }, [selectionItem, setData, selectedData, selectedItem?.id]);
 
   const renderDropDowns = (
     selectedCountry: string,
@@ -183,8 +178,8 @@ export const PlotDataSelectionList: React.FunctionComponent<
           key={sle.id}
         >
           {renderDropDowns(sle.country, sle.indic, sle.id)}
-          
-          <div className="d-flex">
+
+          <div className="d-flex ms-auto">
             <FontAwesomeIcon
               className={`${styles.moreOptions} p-2 me-1`}
               role="button"
@@ -195,53 +190,87 @@ export const PlotDataSelectionList: React.FunctionComponent<
             {renderOptions(sle)}
           </div>
         </div>
-    );
+      );
     });
-
+  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const renderOptions = (sle: any) => (
-    <OverlayTrigger
-      rootClose
-      trigger="click"
-      placement="bottom"
-      overlay={
-        <Popover id="popover-basic">
-          {renderLongDescriptionButton(sle)}
-          {renderDeleteButton(sle)}
-        </Popover>
-      }
-    >
-      <div role={"button"} className={styles.moreOptions}>
-        <FontAwesomeIcon icon={faUserCog} />
-      </div>
-    </OverlayTrigger>
-  );
-
-  const renderLongDescriptionButton = (sle: any) => (
     <div
-      className={`${styles.moreOptionsItem} ${
-        sle.indic === "Metric" ? "pe-none text-muted" : ""
-      }`}
-      role="button"
-      onClick={() =>
-        showModal({
-          bd: `This is a long description about ${sle.indic}`,
-          show: true,
-        })
-      }
+      role={"button"}
+      className={styles.moreOptions}
+      onClick={(e) => {
+        setAnchorEl(e.currentTarget);
+        setSelectedItem(sle);
+        setOpen(!open);
+      }}
     >
-      <FontAwesomeIcon icon={faBook} />
-      <span className="ms-2">Description</span>
+      <FontAwesomeIcon icon={faUserCog} />
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+      >
+        {renderLongDescriptionButton()}
+        {renderDeleteButton()}
+      </Popover>
     </div>
   );
 
-  const renderDeleteButton = (sle: any) => (
+  const renderLongDescriptionButton = () => {
+    return (
+      <div
+        className={`${styles.moreOptionsItem} ${
+          selectedItem?.indic === "Metric" ? "pe-none text-muted" : ""
+        }`}
+        role="button"
+        onClick={() => {
+          setOpen(false);
+          showModal({
+            bd: `This is a long description about ${selectedItem?.indic}`,
+            show: true,
+          });
+        }}
+      >
+        <FontAwesomeIcon icon={faBook} />
+        <span className="ms-2">Description</span>
+      </div>
+    );
+  };
+
+  const renderDeleteButton = () => (
     <div
       className={`${styles.moreOptionsItem} ${styles.delete}`}
       role="button"
-      onClick={() => deleteDatasFromPlot(sle.id, sle.country, sle.indic)}
+      onClick={() => {
+        setOpen(false);
+        deleteDatasFromPlot();
+      }}
     >
       <FontAwesomeIcon icon={faTrash} />
       <span className="ms-2">Delete</span>
+    </div>
+  );
+
+  const renderAddNewItemButton = () => (
+    <div className="d-flex mt-2 me-2 mb-2">
+      <FontAwesomeIcon
+        className={`ms-auto mt-2 p-2 rounded-circle ${styles.addOptionBtn}`}
+        icon={faPlus}
+        role="button"
+        onClick={() =>
+          setSelectionItem([
+            ...selectionItem,
+            {
+              id: selectionItem[selectionItem.length - 1].id + 1,
+              country: "Country",
+              indic: "Metric",
+            },
+          ])
+        }
+      />
     </div>
   );
 
@@ -253,27 +282,9 @@ export const PlotDataSelectionList: React.FunctionComponent<
         handleClose={() => showModal({ bd: "", show: false })}
         modalBody={modal.bd}
         showModal={modal.show}
-        modalTitle={"Title"}
+        modalTitle={"Detailed discription of metric"}
       />
-      {isCorrelationPlot && (
-        <div className={`d-flex me-2`}>
-          <FontAwesomeIcon
-            className={`ms-auto mt-2 p-2 rounded-circle ${styles.addOptionBtn}`}
-            icon={faPlus}
-            role="button"
-            onClick={() =>
-              setSelectionItem([
-                ...selectionItem,
-                {
-                  id: selectionItem[selectionItem.length - 1].id + 1,
-                  country: "Country",
-                  indic: "Metric",
-                },
-              ])
-            }
-          />
-        </div>
-      )}
+      {isCorrelationPlot &&  renderAddNewItemButton() }
     </>
   );
 };
@@ -284,3 +295,5 @@ interface PlotOptionsProps {
   triggerPopUp: (message: any) => void;
   isCorrelationPlot?: boolean;
 }
+
+export default memo(PlotDataSelectionList);

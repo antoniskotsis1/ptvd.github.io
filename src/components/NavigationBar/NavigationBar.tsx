@@ -5,38 +5,34 @@ import styles from "./NavigationBar.module.scss";
 import { InfoModal } from "../Modals";
 import { DropDown } from "../DropDown/DropDown";
 import { ChartType } from "../../types";
-import { Button } from "react-bootstrap";
 import { OptionsModal } from "../Modals/OptionsModal";
 
 export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
   props
 ) => {
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const { chartFamily, chartType, setChartFamily, setChartType } = props;
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [dropDownItems, setDropdownItems] = useState<ChartType[]>([
+    ChartType.Line,
+    ChartType.Bar,
+  ]);
+  const {
+    chartFamily,
+    chartType,
+    setChartFamily,
+    setChartType,
+    setRangeOfYears,
+    setAggregateBy,
+  } = props;
 
-  const handleClose = useCallback(
-    () => setShowInfoModal(false),
-    [setShowInfoModal]
-  );
+  const handleClose = useCallback(() => {
+    setShowInfoModal(false);
+    setShowOptionsModal(false);
+  }, [setShowInfoModal]);
   const handleShow = useCallback(
     () => setShowInfoModal(true),
     [setShowInfoModal]
   );
-
-  const mixas = useCallback(() => {
-    fetch("https://ptvd-api.herokuapp.com/mds/countries", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .then((res) => {
-        console.log(res);
-      });
-  }, []);
 
   return (
     <>
@@ -44,7 +40,6 @@ export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
         <div
           className={`${styles.productName} fw-bold fs-3 ms-2 me-auto`}
           role="button"
-          onClick={mixas}
         >
           MDS
         </div>
@@ -54,8 +49,10 @@ export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
             items={["Time/Trend Line", "Correlation Plot"]}
             setSelectedValue={(name) => {
               if (name !== "Time/Trend Line") {
+                setDropdownItems([ChartType.Scatter]);
                 setChartType(ChartType.Scatter);
               } else {
+                setDropdownItems([ChartType.Line, ChartType.Bar]);
                 setChartType("Select Type");
               }
               setChartFamily(name as ChartType);
@@ -64,35 +61,36 @@ export const NavigationBar: React.FunctionComponent<NavigationBarProps> = (
           />
           <DropDown
             title={chartType}
-            items={
-              chartFamily === "Time/Trend Line"
-                ? [ChartType.Bar, ChartType.Line]
-                : [ChartType.Scatter]
-            }
+            items={dropDownItems}
             setSelectedValue={(name) => {
               setChartType(name as ChartType);
             }}
             isNavBar
           />
-          <div className={styles.moreOptions}>
+          <div
+            className={styles.moreOptions}
+            role="button"
+            onClick={() => setShowOptionsModal(true)}
+          >
             <FontAwesomeIcon icon={faCog} />
           </div>
         </div>
         <div className={`${styles.aboutButton} ms-auto `} onClick={handleShow}>
           <FontAwesomeIcon className="p-3" icon={faInfo} role={"button"} />
         </div>
+
         <OptionsModal
-          modalTitle="MDS Choose additional settings"
-          modalBody="This abra katabra app was brought by MDS"
-          showModal={showInfoModal}
+          setRange={setRangeOfYears}
+          setAggregate={setAggregateBy}
+          showModal={showOptionsModal}
           handleClose={handleClose}
         />
-        {/* <InfoModal
+        <InfoModal
           modalTitle="MDS Product info"
           modalBody="This abra katabra app was brought by MDS"
           showModal={showInfoModal}
           handleClose={handleClose}
-        /> */}
+        />
       </div>
     </>
   );
@@ -105,4 +103,6 @@ interface NavigationBarProps {
   setChartType: (type: string) => void;
   chartFamily: string;
   setChartFamily: (type: string) => void;
+  setRangeOfYears: (range: number[]) => void;
+  setAggregateBy: (aggregateValue: number) => void;
 }

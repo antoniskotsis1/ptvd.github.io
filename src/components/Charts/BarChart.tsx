@@ -1,5 +1,5 @@
 import React from "react";
-import { ChartData, ChartType } from "../../types";
+import { ChartType } from "../../types";
 import { Bar, Line, Scatter } from "react-chartjs-2";
 
 import {
@@ -70,7 +70,6 @@ export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
           <Scatter
             data={data}
             options={{
-              showLine: true,
               responsive:true,
               plugins: {
                 legend:{display: false},
@@ -98,8 +97,8 @@ export const BarChart: React.FunctionComponent<BarChartProps> = (props) => {
     }
   };
 
-  return <div className="d-flex align-items-center vw-100">{renderChart()}</div>;
-};
+  return <>{renderChart()}</>
+}
 
 interface BarChartProps {
   type: ChartType;

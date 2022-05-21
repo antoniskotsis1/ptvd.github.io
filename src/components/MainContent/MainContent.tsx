@@ -6,8 +6,7 @@ import { Toast } from "react-bootstrap";
 import GOby from "../../assets/GOby.gif";
 import { PlotDataSelectionList } from "./PlotDataSelectionList/PlotDataSelectionList";
 import { ColorUtils } from "../../utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+import { Drawer } from "@mui/material";
 
 export const MainContent: React.FunctionComponent<MainContentProps> = (
   props
@@ -91,7 +90,7 @@ export const MainContent: React.FunctionComponent<MainContentProps> = (
   const [selectedDataX, setDataX] = useState<ChartDataInterval[]>([]);
   const [selectedDataY, setDataY] = useState<ChartDataInterval[]>([]);
 
-  const renderScatterDataOptions = () => (
+  const renderScatterDataListItems = () => (
     <>
       <span className="fw-bold me-auto ms-2">Y-Axis: </span>
       <PlotDataSelectionList
@@ -129,7 +128,13 @@ export const MainContent: React.FunctionComponent<MainContentProps> = (
     }
     return {
       labels: yAxisLabels,
-      datasets: [{ label: "Correlations", data: fdata.data, backgroundColor:ColorUtils.getrandomColor() }],
+      datasets: [
+        {
+          label: "Correlations",
+          data: fdata.data,
+          backgroundColor: ColorUtils.getrandomColor(),
+        },
+      ],
     };
   };
 
@@ -149,24 +154,64 @@ export const MainContent: React.FunctionComponent<MainContentProps> = (
       </div>
     );
   };
- 
+  const [open, setOpen] = useState(false);
+
+  const handleSidebarOpen = () => {
+    setOpen(true);
+  };
+
+  const handleSidebarClose = () => {
+    setOpen(false);
+  };
+
+  const renderSideBar = () => {
+    return (
+      <Drawer
+        onMouseEnter={() => handleSidebarOpen()}
+        onMouseLeave={() => handleSidebarClose()}
+        sx={{
+          width: 5,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: "auto",
+            marginTop: 7,
+            height: "calc(100vh - 60px)",
+            boxSizing: "border-box",
+          },
+        }}
+        variant="persistent"
+        anchor="left"
+        open={open}
+      >
+        <div className={`${styles.userOptions}`}>
+          <span className={styles.userSelectionTitle}>Select data to plot</span>
+          {chartFamily === "Time/Trend Line" ? (
+            <PlotDataSelectionList
+              selectedData={selectedData}
+              setData={(newData) => setData(newData)}
+              triggerPopUp={(message) => setShow(message)}
+              isCorrelationPlot
+            />
+          ) : (
+            <div className={`d-flex flex-column`}>
+              {renderScatterDataListItems()}
+            </div>
+          )}
+        </div>
+      </Drawer>
+    );
+  };
+
+  useEffect(() => {
+    if (chartType !== "Select Type" && !selectedData.length) {
+      setOpen(true);
+    }
+  }, [chartFamily, chartType, selectedData]);
+
   return (
     <div className={styles.mainContentContainer}>
       {renderToast()}
-      <div className={`${styles.userOptions}`}>
-        <span className={styles.userSelectionTitle}>Select data to plot</span>
-        
-        {chartFamily === "Time/Trend Line" ? (
-          <PlotDataSelectionList
-            selectedData={selectedData}
-            setData={(newData) => setData(newData)}
-            triggerPopUp={(message) => setShow(message)}
-            isCorrelationPlot
-          />
-        ) : (
-          <div className={`d-flex flex-column`}>{renderScatterDataOptions()}</div>
-        )}
-      </div>
+      {renderSideBar()}
       {godPlotData.datasets.length ? (
         <BarChart data={godPlotData} type={chartType as ChartType} />
       ) : (
@@ -181,6 +226,8 @@ export default MainContent;
 interface MainContentProps {
   chartType: string;
   chartFamily: string;
+  rangeOfYears: number[];
+  aggregateBy: number;
 }
 // //  ////////////////////////////////////////
 // //

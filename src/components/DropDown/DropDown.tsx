@@ -4,10 +4,10 @@ import Search from "../Search/Search";
 
 export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
   const { title, items, setSelectedValue, isNavBar } = props;
-  const [country, setCountry] = useState(title);
+  const [value, setValue] = useState(title);
   const [search, setSearch] = useState("");
   const [filteredItems, setItems] = useState(items);
-
+  
   const onSearchChange = useCallback(
     (value: string) => {
       setSearch(value);
@@ -22,9 +22,13 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
 
   return (
     <Dropdown className={` me-1`}>
-      <Dropdown.Toggle style={{ padding: isNavBar?4:0 }}>{title}</Dropdown.Toggle>
+      <Dropdown.Toggle style={{ padding: isNavBar ? 4 : 0 }}>
+        {title}
+      </Dropdown.Toggle>
 
-      <Dropdown.Menu style={{ maxHeight: "50vh", overflow: "auto" }}>
+      <Dropdown.Menu
+        style={{ maxHeight: "50vh", overflowX: "hidden", overflowY: "auto" }}
+      >
         {!isNavBar && (
           <Dropdown.Header>
             <Search placeholder="Search" onChange={onSearchChange} />
@@ -34,9 +38,10 @@ export const DropDown: React.FunctionComponent<DropDownProps> = (props) => {
           return (
             <Dropdown.Item
               key={name}
+              className="me-2"
               onClick={() => {
                 setSelectedValue(name);
-                setCountry(name);
+                setValue(name);
               }}
             >
               {name}
