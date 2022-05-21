@@ -1,16 +1,19 @@
 {
   "files": {
-    "main.css": "/ptvd.github.io/static/css/main.ec019669.css",
-    "main.js": "/ptvd.github.io/static/js/main.258955f4.js",
+    "main.css": "/ptvd.github.io/static/css/main.7cfd2816.css",
+    "main.js": "/ptvd.github.io/static/js/main.27892929.js",
     "static/js/787.6276644d.chunk.js": "/ptvd.github.io/static/js/787.6276644d.chunk.js",
     "static/media/GOby.gif": "/ptvd.github.io/static/media/GOby.8e4102ae95157d5f9177.gif",
+    "static/media/inst_3.jpg": "/ptvd.github.io/static/media/inst_3.6b9c2da3a5a45d41d25b.jpg",
+    "static/media/inst_1.jpg": "/ptvd.github.io/static/media/inst_1.4cae1734bd245b6898cb.jpg",
+    "static/media/inst_2.jpg": "/ptvd.github.io/static/media/inst_2.d71b68335526e546b8b0.jpg",
     "index.html": "/ptvd.github.io/index.html",
-    "main.ec019669.css.map": "/ptvd.github.io/static/css/main.ec019669.css.map",
-    "main.258955f4.js.map": "/ptvd.github.io/static/js/main.258955f4.js.map",
+    "main.7cfd2816.css.map": "/ptvd.github.io/static/css/main.7cfd2816.css.map",
+    "main.27892929.js.map": "/ptvd.github.io/static/js/main.27892929.js.map",
     "787.6276644d.chunk.js.map": "/ptvd.github.io/static/js/787.6276644d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ec019669.css",
-    "static/js/main.258955f4.js"
+    "static/css/main.7cfd2816.css",
+    "static/js/main.27892929.js"
   ]
 }
